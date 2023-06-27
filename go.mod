@@ -1,4 +1,4 @@
-module Work/ChatOPS
+module Priyank-Vaidya/ChatOps
 
 go 1.20
 
