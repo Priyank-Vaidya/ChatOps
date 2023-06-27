@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/Priyank-Vaidya/Slack-ChatOps/tree/master/model"
+	"github.com/Priyank-Vaidya/ChatOps/model"
 	"net/http"
 	
 )

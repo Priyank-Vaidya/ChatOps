@@ -4,31 +4,31 @@ import (
 	"log"
 	// "github.com/gin-gonic/gin"
 	// "github.com/gocql/gocql"
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	// "github.com/Priyank-Vaidya/Slack-ChatOps/tree/master/routers"
 	"fmt"
 	"os"
-	""
+	"github.com/Priyank-Vaidya/ChatOps/routers"
 )
 
 func main() {
-	
+
 	// err := database.initCassandra();
 	// if err != nil {
 	// 	log.Fatal("Failed to initialize Cassandra:", err)
 	// }
 
-	// err := godotenv.Load()
-	// if(err!=nil){
-	// 	log.Fatal("Error in loading ENV")
-	// }
+	err := godotenv.Load()
+	if(err!=nil){
+		log.Fatal("Error in loading ENV")
+	}
 
-	// slackToken := os.Getenv("SLACK_AUTH_TOKEN")
-	// fmt.Println(slackToken)
+	slackToken := os.Getenv("SLACK_AUTH_TOKEN")
+	fmt.Println(slackToken)
 
-	// router := gin.Default()
+	router := gin.Default()
 
-	// routers.InitializeRoutes(router)
+	routers.InitializeRoutes(router)
 
 	
 
