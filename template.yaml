@@ -1,0 +1,102 @@
+# This is a SAM template that defines the application's AWS resources.
+# Give yaml configuration for lambda function and s3 bucket
+# This template uses conditions, parameters, and mappings to make the template more dynamic.
+
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: Dev
+    AllowedValues:
+      - Dev
+      - Prod
+    Description: The environment for the application.
+
+Conditions:
+  IsProduction:
+    Fn::Equals:
+      - !Ref Environment
+      - Prod
+
+Mappings:
+
+  LambdaBucketName:
+    Dev:
+      Name: "chatops-lambda-bucket-dev"
+    Prod:
+      Name: "chatops-lambda-bucket-prod"
+
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: 'ChatBot_Application'
+      Handler: main
+      Runtime: go1.x
+      Role: "arn:aws:iam::736077925536:role/lambda_execution_test_role"
+      CodeUri: 
+        Bucket: !FindInMap [ LambdaBucketName, !Ref Environment, Name ]
+        Key: "code.zip"
+
+      Timeout: 30
+      Events:
+        SendMessage: 
+          Type: Api
+          Properties:
+            Path: /slackapi
+            Method: POST
+
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !FindInMap [ LambdaBucketName, !Ref Environment, Name ]
+      Tags:
+        - Key: Name 
+          Value : "chatops-lambda-bucket"
+        - Key : Environment
+          Value : Dev
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireRule
+            Status: Enabled
+            ExpirationInDays: 30
+
+
+
+# Resources:
+#   MyLambdaFunction:
+#     Type: 'AWS::Serverless::Function'
+#     Properties:
+#       FunctionName: 'ChatBot_Application'
+#       Handler: main
+#       Runtime: go1.x
+#       Role: "arn:aws:iam::736077925536:role/lambda_execution_test_role"
+#       CodeUri: 
+#         Bucket: "${aws_s3_bucket.lambda_bucket.id}"
+#         Key: "code.zip"
+
+#       Timeout: 30
+#       Events:
+#         SendMessage: 
+#           Type: Api
+#           Properties:
+#             Path: /slackapi
+#             Method: POST
+
+#   MyS3Bucket:
+#     Type: 'AWS::S3::Bucket'
+#     Properties:
+#       BucketName: "${aws_s3_bucket.lambda_bucket.id}"
+#       Tags:
+#         - Key: Name 
+#           Value : "chatops-lambda-bucket"
+#         - Key : Environment
+#           Value : Dev
+#       LifecycleConfiguration:
+#         Rules:
+#           - Id: ExpireRule
+#             Status: Enabled
+#             ExpirationInDays: 30

@@ -1,4 +1,4 @@
-package User
+package slack
 
 import (
 	"github.com/gocql/gocql"

@@ -1,1 +1,7 @@
 .env
+/.terraform.lock.hcl
+/.terraform/
+/terraform.tfstate
+/terraform.tfstate.backup
+/code/go.mod
+/code/go.sum
